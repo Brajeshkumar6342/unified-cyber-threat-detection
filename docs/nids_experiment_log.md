@@ -153,7 +153,6 @@ These differences are exploratory observations. They do not establish causation,
 7. Extend the project to static malware classification and process-level threat attribution.
 8. Integrate the validated components into the unified threat detection framework.
 
-
 ## 11. Additional Tree-Ensemble Experiments
 
 ### Random Forest vs. Extra Trees
@@ -228,3 +227,87 @@ These splits share the same underlying dataset and are not independent external 
 4. Evaluate the selected candidate on the reserved official UNSW-NB15 test set once.
 5. Develop the static malware classification component.
 6. Investigate process-level threat attribution and integrate the three components.
+
+## 15. Initial Five-Feature Cross-Dataset Transfer Experiment
+
+### Objective
+
+Evaluate whether a Random Forest trained on UNSW-NB15 can generalize to the CICIDS2017 Friday DDoS subset using five candidate common features.
+
+### Method
+
+- Source: `UNSW_NB15_training-set.csv`
+- Source split: stratified 80/20 training/validation split, random state 42
+- Source training rows: 140,272
+- Source validation rows: 35,069
+- Target: `Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv`
+- Target evaluation rows: 225,745
+- Features: duration, forward packets, backward packets, forward bytes, backward bytes
+- Model: Random Forest with 200 estimators, `max_features="sqrt"`, `min_samples_leaf=2`, random state 42
+- Preprocessing: median imputation fitted within a pipeline on source training data only
+- Target duration: converted from microseconds to seconds; the two negative duration values were marked missing and imputed using the source-fitted median
+- The official UNSW-NB15 test set was not used.
+
+### Results
+
+| Metric | UNSW-NB15 validation | CICIDS2017 transfer |
+|---|---:|---:|
+| Accuracy | 0.9460 | 0.5160 |
+| Attack precision | 0.9502 | 0.5651 |
+| Attack recall | 0.9717 | 0.6357 |
+| Attack F1-score | 0.9608 | 0.5983 |
+| ROC-AUC | 0.9889 | 0.5548 |
+| True negatives | 9,984 | 35,095 |
+| False positives | 1,216 | 62,623 |
+| False negatives | 676 | 46,642 |
+| True positives | 23,193 | 81,385 |
+
+### Interpretation
+
+The model performed substantially worse on CICIDS2017 than on the held-out UNSW-NB15 validation split. The CICIDS2017 false-positive rate was approximately 64.12%, and the ROC-AUC was 0.5548.
+
+Possible explanations include differences in feature distributions, flow-direction conventions, feature definitions, attack composition, and the restricted five-feature representation. This experiment does not isolate which explanation is responsible.
+
+### Limitations
+
+The four packet/byte mappings remain candidate mappings, not fully verified equivalences. The target evaluation is restricted to the Friday DDoS subset and does not establish generalization to all CICIDS2017 attack categories.
+
+This result is an initial cross-dataset baseline. CICIDS2017 results must not be used to tune this source-trained model in subsequent transfer experiments; any changes should be evaluated using a clearly separated experimental protocol.
+
+### 16. Cross-Dataset Feature Distribution Shift Analysis
+
+**Objective:** Investigate differences in candidate common-feature distributions between UNSW-NB15 and CICIDS2017 to help explain the poor cross-dataset transfer performance.
+
+**Analysis script:** `src/nids/analyze_cross_dataset_shift.py`
+
+**Output report:** `reports/tables/cross_dataset_feature_shift.csv`
+
+**Methodology:**
+- Compared five candidate common features: duration, forward packets, backward packets, forward bytes, and backward bytes.
+- Used the UNSW-NB15 training CSV and the CICIDS2017 Friday DDoS CSV.
+- Converted CICIDS2017 flow duration from microseconds to seconds.
+- Treated negative CICIDS2017 durations as missing in the derived analysis.
+- Calculated count, missing values, mean, standard deviation, minimum, median, 95th percentile, 99th percentile, and maximum.
+- This was a descriptive analysis; no model tuning was performed using target evaluation labels.
+
+**Key findings:**
+
+| Feature | UNSW-NB15 median | CICIDS2017 median |
+|---|---:|---:|
+| Duration (seconds) | 0.001582 | 1.45234 |
+| Forward packets | 2 | 3 |
+| Backward packets | 2 | 4 |
+| Forward bytes | 430 | 30 |
+| Backward bytes | 164 | 164 |
+
+Duration and forward-byte distributions show substantial differences between the datasets. Packet-count medians also differ, while equal backward-byte medians do not imply equivalent distributions.
+
+**Interpretation:** The observed differences are consistent with substantial feature-distribution shift and may contribute to poor cross-dataset generalization. However, this descriptive comparison does not establish the cause of the transfer failure. Differences in feature definitions, traffic characteristics, class composition, and dataset collection procedures require further investigation.
+
+**Limitations:**
+- The analysis compares overall dataset distributions rather than distributions within each class.
+- Candidate semantic feature mappings have not been fully validated as equivalent.
+- The results do not establish which features are responsible for the model's errors.
+- The CICIDS2017 target evaluation results remain diagnostic and must not be used to tune the model if they are to serve as a held-out evaluation.
+
+**Next step:** Investigate feature definitions and compare source-training and source-validation distributions. Design any further model-selection procedure using source training and validation data, keeping the target evaluation set separate from model selection.
