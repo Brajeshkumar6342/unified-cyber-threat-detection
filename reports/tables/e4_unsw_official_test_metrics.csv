@@ -1,0 +1,2 @@
+evaluation,features,training_rows,test_rows,accuracy,precision,recall,f1,roc_auc,true_negatives,false_positives,false_negatives,true_positives,false_positive_rate,false_negative_rate
+UNSW-NB15 official test; source-domain evaluation,"dur, spkts, dpkts, dbytes",175341,82332,0.8167541174755867,0.7619204323051076,0.9704182475955175,0.8536223306716859,0.8718765256808029,23254,13746,1341,43991,0.3715135135135135,0.029581752404482485

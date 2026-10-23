@@ -440,3 +440,61 @@ The high within-dataset results also warrant further investigation into evaluati
 3. Design an evaluation protocol that separates model selection from external testing.
 4. Compare any proposed changes against the preserved cross-dataset baseline.
 5. Report limitations and avoid claims of proven data leakage unless supported by further evidence.
+
+## Experiment 18: Cross-dataset feature ablation and stability
+
+The five-feature cross-dataset baseline (E0) was compared with E4, which removes `forward_bytes` and retains `duration_seconds`, `forward_packets`, `backward_packets`, and `backward_bytes`.
+
+Across five source training split seeds (21, 42, 84, 123, and 2026), E0 achieved mean CICIDS2017 transfer F1 of 0.5924 (standard deviation 0.0051) and mean ROC-AUC of 0.5567 (standard deviation 0.0260). E4 achieved mean transfer F1 of 0.6987 (standard deviation 0.0167) and mean ROC-AUC of 0.6373 (standard deviation 0.0061).
+
+E4 outperformed E0 in transfer F1 across all five tested splits. Its mean false-positive rate was 0.4669 and mean false-negative rate was 0.2716. These error rates remain substantial, so the model is not ready for operational use.
+
+The source-validation mean F1 decreased from approximately 0.9614 for E0 to 0.9495 for E4. This suggests that the feature ablation trades a small amount of source-domain performance for improved transfer performance on the tested CICIDS2017 subset.
+
+The five runs share the same target dataset and are not independent external evaluations. The observed improvement is evidence for further investigation, not proof that removing `forward_bytes` resolves dataset shift.
+
+## Experiment 19: Log-transform comparison
+
+E4 was compared with E6, which applies `log1p` to the four retained features after the same preprocessing and feature mapping.
+
+In the tested split, E4 achieved CICIDS2017 transfer F1 of 0.6846 and ROC-AUC of 0.6392. E6 achieved F1 of 0.6383 and ROC-AUC of 0.6052. The log-transformed version therefore did not improve transfer performance under the tested configuration.
+
+Source-validation results were nearly unchanged. This experiment does not establish the underlying cause of the target-performance difference.
+
+## Experiment 20: E7 feature reduction
+
+E7 retained only `duration_seconds`, `forward_packets`, and `backward_packets`, removing both byte-count features from E4.
+
+Across five source split seeds, E7 achieved mean CICIDS2017 transfer F1 of 0.3689 (standard deviation 0.0130) and mean ROC-AUC of 0.3781 (standard deviation 0.0181). Its mean false-positive rate was 0.5100 and mean false-negative rate was 0.6857.
+
+E7 performed substantially worse than E4 and is rejected as the current transfer candidate. The results indicate that removing `backward_bytes` in addition to `forward_bytes` is harmful under this experimental setup.
+
+## Updated interpretation and next steps
+
+E4 is the strongest cross-dataset candidate among the tested configurations so far, but transfer performance remains limited. CICIDS2017 has already informed feature selection and experimentation, so it must not be described as an untouched external test set.
+
+The next stage is to finalize the evaluation protocol and evaluate a frozen source-trained model on the reserved official UNSW-NB15 test set for source-domain validation. This evaluation must not be used to select features or tune the model. CICIDS2017 transfer results should be reported separately, with the exploratory model-selection history disclosed.
+
+## Experiment 21: E4 evaluation on the official UNSW-NB15 test set
+
+The E4 Random Forest model was trained on all 175,341 records in the official UNSW-NB15 training file and evaluated on the 82,332 records in the official UNSW-NB15 testing file. The model used four features: `dur`, `spkts`, `dpkts`, and `dbytes`. Median imputation and the previously specified Random Forest configuration were used.
+
+| Metric | Result |
+|---|---:|
+| Accuracy | 0.8168 |
+| Precision | 0.7619 |
+| Recall | 0.9704 |
+| F1-score | 0.8536 |
+| ROC-AUC | 0.8719 |
+| True negatives | 23,254 |
+| False positives | 13,746 |
+| False negatives | 1,341 |
+| True positives | 43,991 |
+| False-positive rate | 0.3715 |
+| False-negative rate | 0.0296 |
+
+The model achieved high attack recall but produced a substantial number of false positives. The false-positive rate of 37.15% indicates that benign records were frequently classified as attacks. Therefore, high recall alone is insufficient to establish operational suitability.
+
+This evaluation measures source-domain performance on the official UNSW-NB15 test set. It is distinct from the CICIDS2017 cross-dataset transfer experiments. The official test set was not used to select features or tune model parameters during these experiments.
+
+The results should be interpreted in light of the experimental protocol and the feature-mapping limitations documented above.
