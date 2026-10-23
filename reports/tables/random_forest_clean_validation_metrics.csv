@@ -1,0 +1,2 @@
+experiment,random_state,validation_fraction,preprocessing_fit_on_training_fold_only,n_estimators,max_features,accuracy,precision_attack,recall_attack,f1_attack,roc_auc,true_negatives,false_positives,false_negatives,true_positives,false_positive_rate,training_seconds,processed_feature_count
+clean_validation_rf_100_sqrt,42,0.2,True,100,sqrt,0.9592517608143944,0.9639047382783429,0.9767061879425196,0.9702632400374571,0.9937489507460364,10327,873,556,23313,0.07794642857142857,9.82942247390747,192
