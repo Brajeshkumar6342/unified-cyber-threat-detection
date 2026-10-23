@@ -311,3 +311,132 @@ Duration and forward-byte distributions show substantial differences between the
 - The CICIDS2017 target evaluation results remain diagnostic and must not be used to tune the model if they are to serve as a held-out evaluation.
 
 **Next step:** Investigate feature definitions and compare source-training and source-validation distributions. Design any further model-selection procedure using source training and validation data, keeping the target evaluation set separate from model selection.
+
+## 17. CICIDS2017 Within-Dataset Experiments
+
+### Objective
+
+Evaluate Random Forest performance within the CICIDS2017 Friday DDoS subset and investigate the contribution of individual features. These experiments complement the initial cross-dataset transfer baseline.
+
+### Dataset and methodology
+
+- **Dataset:** `Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv`
+- **Original records:** 225,745
+- **Benign records:** 97,718
+- **DDoS records:** 128,027
+- **Candidate features:** Duration, forward packets, backward packets, forward bytes, and backward bytes.
+- **Label encoding:** BENIGN = 0; DDoS = 1.
+- **Data split:** Stratified 80/20 train/test split using random state 42.
+- **Model:** Random Forest with 200 estimators, `max_features="sqrt"`, `min_samples_leaf=2`, and random state 42.
+- **Missing values:** Median imputation fitted on training data only.
+- **Duration:** Converted from microseconds to seconds; negative durations were treated as missing.
+
+The within-dataset experiments use a random split of the same dataset. They do not establish generalization to unseen datasets or collection environments.
+
+### Experiment 1: Five-feature baseline
+
+The model was trained and evaluated using all five candidate features.
+
+| Metric | Result |
+|---|---:|
+| Accuracy | 99.95% |
+| Precision | 99.98% |
+| Recall | 99.93% |
+| F1-score | 99.96% |
+| ROC-AUC | 1.0000 |
+| True negatives | 19,540 |
+| False positives | 4 |
+| False negatives | 17 |
+| True positives | 25,588 |
+
+The dataset contained 2,633 exact duplicate rows. Removing these duplicates before splitting produced 223,112 records. The deduplicated experiment achieved 99.95% accuracy, 99.97% precision, 99.94% recall, 99.96% F1-score, and 1.0000 ROC-AUC.
+
+The similar results suggest that removing exact duplicate rows alone did not substantially change performance. They do not rule out other forms of dependence between records or other sources of optimistic evaluation.
+
+### Experiment 2: Feature importance
+
+Random Forest feature importance was calculated for the five-feature model.
+
+| Feature | Importance |
+|---|---:|
+| Forward bytes | 0.344575 |
+| Forward packets | 0.312377 |
+| Backward bytes | 0.181228 |
+| Backward packets | 0.115445 |
+| Duration | 0.046375 |
+
+Forward bytes and forward packet counts had the highest importance scores. These scores describe the model's relative use of features; they do not establish causal importance or cross-dataset reliability.
+
+### Experiment 3: Class-conditional feature analysis
+
+The top two features were examined separately for BENIGN and DDoS records.
+
+| Feature | Class | Median | 95th percentile | 99th percentile |
+|---|---|---:|---:|---:|
+| Forward bytes | BENIGN | 70 | 11,613 | 12,982 |
+| Forward bytes | DDoS | 26 | 56 | 62 |
+| Forward packets | BENIGN | 2 | 17 | 47 |
+| Forward packets | DDoS | 4 | 8 | 9 |
+
+These statistics show substantial differences in the observed distributions of forward-byte counts between the two classes. They help explain why the feature may be predictive within this subset but do not establish that the same pattern holds in other datasets.
+
+### Experiment 4: Excluding forward bytes
+
+The model was retrained using four features: forward packets, backward packets, backward bytes, and duration.
+
+| Metric | Result |
+|---|---:|
+| Accuracy | 99.90% |
+| Precision | 99.93% |
+| Recall | 99.90% |
+| F1-score | 99.92% |
+| ROC-AUC | 0.9998 |
+| True negatives | 19,527 |
+| False positives | 17 |
+| False negatives | 26 |
+| True positives | 25,579 |
+
+Removing forward bytes resulted in a small reduction in performance. The remaining features still provided strong discrimination within the CICIDS2017 split.
+
+### Experiment 5: Packet counts only
+
+The model was retrained using only forward and backward packet counts.
+
+| Metric | Result |
+|---|---:|
+| Accuracy | 98.12% |
+| Precision | 97.40% |
+| Recall | 99.33% |
+| F1-score | 98.36% |
+| ROC-AUC | 0.9948 |
+| True negatives | 18,866 |
+| False positives | 678 |
+| False negatives | 171 |
+| True positives | 25,434 |
+
+Packet counts alone provided strong within-dataset discrimination, but the reduced-feature model generated more false positives than the five-feature baseline.
+
+### Overall interpretation
+
+The within-CICIDS2017 experiments achieved very high performance, even when some features were removed. However, the initial experiment trained on UNSW-NB15 and evaluated on CICIDS2017 achieved only 51.60% accuracy and 0.5548 ROC-AUC.
+
+This contrast indicates that within-dataset performance does not guarantee cross-dataset generalization. Feature-distribution shift, feature-definition differences, collection characteristics, and traffic composition are possible explanations, but their individual contributions have not been established.
+
+The high within-dataset results also warrant further investigation into evaluation design and potential dependence among records. Removing exact duplicates alone did not materially change the results, so duplicate removal should not be treated as a complete test for leakage or dependence.
+
+### Limitations
+
+1. The within-dataset test split comes from the same source dataset as the training split.
+2. The experiments focus on the CICIDS2017 Friday DDoS subset, not all CICIDS2017 attack categories.
+3. The five cross-dataset feature mappings remain candidate mappings rather than fully verified semantic equivalents.
+4. Random splitting does not establish performance on a future time period, an unseen network, or an independent capture.
+5. Feature importance and class-wise statistics are descriptive and do not establish causation.
+6. The official UNSW-NB15 test set remains reserved for final evaluation.
+
+### Next steps
+
+1. Verify the semantic definitions and direction conventions of the five mapped features.
+2. Investigate dataset shift without using the reserved UNSW-NB15 test set for model tuning.
+3. Design an evaluation protocol that separates model selection from external testing.
+4. Compare any proposed changes against the preserved cross-dataset baseline.
+5. Report limitations and avoid claims of proven data leakage unless supported by further evidence.
