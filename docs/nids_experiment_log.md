@@ -152,3 +152,79 @@ These differences are exploratory observations. They do not establish causation,
 6. Compare the final candidate with the original baseline using the same official test set.
 7. Extend the project to static malware classification and process-level threat attribution.
 8. Integrate the validated components into the unified threat detection framework.
+
+
+## 11. Additional Tree-Ensemble Experiments
+
+### Random Forest vs. Extra Trees
+
+Both models were trained using the raw UNSW-NB15 training CSV. Preprocessing was fitted only on the training fold, with a stratified 80/20 split using random state 42.
+
+| Metric | Random Forest | Extra Trees |
+|---|---:|---:|
+| Attack precision | 96.06% | 92.97% |
+| Attack recall | 98.09% | 99.71% |
+| Attack F1-score | 97.06% | 96.22% |
+| ROC-AUC | 99.39% | 99.25% |
+| False-positive rate | 8.57% | 16.08% |
+| False positives | 960 | 1,801 |
+| False negatives | 456 | 69 |
+
+Extra Trees achieved higher attack recall but generated substantially more false positives. Random Forest provided the better overall F1-score.
+
+### Threshold Comparison
+
+Thresholds from 0.30 to 0.70 were evaluated for both models on the same validation split.
+
+Neither model met both experimental targets: attack recall of at least 98% and false-positive rate of at most 5%.
+
+For Random Forest, increasing the threshold reduced false positives but also reduced attack recall. These results demonstrate the trade-off between detection sensitivity and false alarms.
+
+## 12. Feature-Selection Experiments
+
+### Single-Split Comparison
+
+Feature selection was performed using feature importance learned from the training fold.
+
+| Configuration | Features | Attack F1-score | Attack recall | False-positive rate | False positives |
+|---|---:|---:|---:|---:|---:|
+| All features | 192 | 97.06% | 98.09% | 8.57% | 960 |
+| Top 100 | 100 | 97.09% | 97.99% | 8.23% | 922 |
+| Top 50 | 50 | 97.18% | 98.04% | 7.97% | 893 |
+
+The top-50 configuration improved the validation F1-score slightly and reduced false positives compared with the full feature set.
+
+### Three-Split Stability Experiment
+
+Three stratified 80/20 validation splits were evaluated using random states 42, 21, and 7. Feature ranking was learned separately from each training fold.
+
+| Mean metric | All features | Top 50 features |
+|---|---:|---:|
+| Attack precision | 95.90% | 96.19% |
+| Attack recall | 98.26% | 98.08% |
+| Attack F1-score | 97.07% | 97.13% |
+| ROC-AUC | 99.39% | 99.41% |
+| False-positive rate | 8.96% | 8.29% |
+| Mean false positives | 1,004 | 928 |
+| Mean false negatives | 415 | 458 |
+
+Across these three splits, selecting 50 features produced a small average improvement in F1-score and fewer false positives, but also slightly lower attack recall.
+
+These splits share the same underlying dataset and are not independent external tests. The results support further investigation rather than a definitive claim of improved generalization.
+
+## 13. Updated Research Limitations
+
+1. The current experiments use UNSW-NB15 and do not establish cross-dataset generalization.
+2. The feature-selection improvement is modest and has been assessed on only three validation splits.
+3. The proposed recall and false-positive-rate targets have not been achieved simultaneously by the tested configurations.
+4. Results from different datasets and research papers may not be directly comparable because their tasks, splits, and evaluation protocols differ.
+5. Static malware classification and process-level threat attribution remain to be implemented and evaluated.
+
+## 14. Next Research Priorities
+
+1. Document the validation findings and preserve experiment reproducibility.
+2. Investigate cross-dataset generalization using a second NIDS dataset.
+3. Select and freeze the NIDS candidate using training and validation evidence.
+4. Evaluate the selected candidate on the reserved official UNSW-NB15 test set once.
+5. Develop the static malware classification component.
+6. Investigate process-level threat attribution and integrate the three components.
