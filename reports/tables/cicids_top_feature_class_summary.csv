@@ -1,0 +1,5 @@
+feature,traffic_class,count,mean,median,p95,p99,maximum,zero_count
+forward_bytes,BENIGN,97718,2128.5125667737775,70.0,11613.0,12982.0,183012,5422
+forward_bytes,DDoS,128027,31.908597405234833,26.0,56.0,62.0,74,0
+forward_packets,BENIGN,97718,5.402228862645572,2.0,17.0,47.0,1932,0
+forward_packets,DDoS,128027,4.47243940731252,4.0,8.0,9.0,11,0
