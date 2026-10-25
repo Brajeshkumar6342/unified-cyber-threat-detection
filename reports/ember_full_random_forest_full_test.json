@@ -1,0 +1,28 @@
+{
+  "dataset": "EMBER 2018 official test_features.jsonl",
+  "model": "models\\malware\\ember_random_forest_full.joblib",
+  "features": 531,
+  "evaluation_records": 200000,
+  "class_counts": {
+    "benign": 100000,
+    "malicious": 100000
+  },
+  "decision_threshold": 0.5,
+  "accuracy": 0.924075,
+  "precision_malicious": 0.9231567498528194,
+  "recall_malicious": 0.92516,
+  "f1_malicious": 0.9241572893410649,
+  "roc_auc": 0.9776964135500001,
+  "confusion_matrix": [
+    [
+      92299,
+      7701
+    ],
+    [
+      7484,
+      92516
+    ]
+  ],
+  "classification_report": "              precision    recall  f1-score   support\n\n      Benign       0.92      0.92      0.92    100000\n   Malicious       0.92      0.93      0.92    100000\n\n    accuracy                           0.92    200000\n   macro avg       0.92      0.92      0.92    200000\nweighted avg       0.92      0.92      0.92    200000\n",
+  "elapsed_seconds": 39.85
+}

@@ -31,3 +31,13 @@ models/*
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Research artifacts and temporary backups
+reports/*.joblib
+README_backup_before_final.md
+src/*.bak
+
+# One-time maintenance scripts
+/fix_dmbd_label_mapping.py
+/repair_dmbd_lstm.py
+/repair_dmbd_lstm_validation.py

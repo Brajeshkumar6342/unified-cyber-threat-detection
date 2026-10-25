@@ -1,0 +1,76 @@
+{
+  "validation_size": 6000,
+  "validation_benign": 3000,
+  "validation_malicious": 3000,
+  "note": "Exploratory validation results only. The saved LSTM checkpoint was selected using this same validation split, so its results are not an independent estimate. Official test data was not used.",
+  "models": {
+    "random_forest": {
+      "accuracy": 0.9381666666666667,
+      "precision": 0.9524956970740103,
+      "recall": 0.9223333333333333,
+      "f1": 0.9371718882303133,
+      "roc_auc": 0.9859672777777778,
+      "confusion_matrix": [
+        [
+          2862,
+          138
+        ],
+        [
+          233,
+          2767
+        ]
+      ]
+    },
+    "lstm": {
+      "accuracy": 0.8446666666666667,
+      "precision": 0.856551724137931,
+      "recall": 0.828,
+      "f1": 0.8420338983050848,
+      "roc_auc": 0.8981772777777778,
+      "confusion_matrix": [
+        [
+          2584,
+          416
+        ],
+        [
+          516,
+          2484
+        ]
+      ]
+    },
+    "probability_average": {
+      "accuracy": 0.914,
+      "precision": 0.944206008583691,
+      "recall": 0.88,
+      "f1": 0.9109730848861284,
+      "roc_auc": 0.9709922777777777,
+      "confusion_matrix": [
+        [
+          2844,
+          156
+        ],
+        [
+          360,
+          2640
+        ]
+      ]
+    },
+    "or_rule": {
+      "accuracy": 0.883,
+      "precision": 0.8515911872705019,
+      "recall": 0.9276666666666666,
+      "f1": 0.8880025526483727,
+      "roc_auc": 0.9636429444444444,
+      "confusion_matrix": [
+        [
+          2515,
+          485
+        ],
+        [
+          217,
+          2783
+        ]
+      ]
+    }
+  }
+}

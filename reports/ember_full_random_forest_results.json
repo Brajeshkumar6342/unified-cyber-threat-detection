@@ -1,0 +1,29 @@
+{
+  "dataset": "EMBER 2018 labeled training files",
+  "records": 600000,
+  "features": 531,
+  "train_records": 480000,
+  "validation_records": 120000,
+  "n_estimators": 100,
+  "max_depth": 20,
+  "min_samples_leaf": 2,
+  "max_features": "sqrt",
+  "random_state": 42,
+  "accuracy": 0.9478166666666666,
+  "precision_malicious": 0.9533169118639493,
+  "recall_malicious": 0.94175,
+  "f1_malicious": 0.9474981554765578,
+  "roc_auc": 0.9902699972222221,
+  "confusion_matrix": [
+    [
+      57233,
+      2767
+    ],
+    [
+      3495,
+      56505
+    ]
+  ],
+  "classification_report": "              precision    recall  f1-score   support\n\n      Benign       0.94      0.95      0.95     60000\n   Malicious       0.95      0.94      0.95     60000\n\n    accuracy                           0.95    120000\n   macro avg       0.95      0.95      0.95    120000\nweighted avg       0.95      0.95      0.95    120000\n",
+  "elapsed_seconds": 257.39
+}

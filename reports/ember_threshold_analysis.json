@@ -1,0 +1,103 @@
+{
+  "dataset": "EMBER 2018 labeled training files; reconstructed validation split",
+  "validation_records": 120000,
+  "features": 531,
+  "random_state": 42,
+  "validation_fraction": 0.2,
+  "thresholds": [
+    {
+      "threshold": 0.2,
+      "accuracy": 0.9016083333333333,
+      "precision_malicious": 0.841199042804752,
+      "recall_malicious": 0.9901333333333333,
+      "f1_malicious": 0.9096100992933863,
+      "false_positive_rate": 0.18691666666666668,
+      "false_negative_rate": 0.009866666666666666,
+      "true_negatives": 48785,
+      "false_positives": 11215,
+      "false_negatives": 592,
+      "true_positives": 59408
+    },
+    {
+      "threshold": 0.3,
+      "accuracy": 0.9313416666666666,
+      "precision_malicious": 0.894261383544323,
+      "recall_malicious": 0.9783666666666667,
+      "f1_malicious": 0.934425316173603,
+      "false_positive_rate": 0.11568333333333333,
+      "false_negative_rate": 0.021633333333333334,
+      "true_negatives": 53059,
+      "false_positives": 6941,
+      "false_negatives": 1298,
+      "true_positives": 58702
+    },
+    {
+      "threshold": 0.4,
+      "accuracy": 0.943725,
+      "precision_malicious": 0.9275562478922096,
+      "recall_malicious": 0.9626333333333333,
+      "f1_malicious": 0.9447693201056686,
+      "false_positive_rate": 0.07518333333333334,
+      "false_negative_rate": 0.037366666666666666,
+      "true_negatives": 55489,
+      "false_positives": 4511,
+      "false_negatives": 2242,
+      "true_positives": 57758
+    },
+    {
+      "threshold": 0.5,
+      "accuracy": 0.9478166666666666,
+      "precision_malicious": 0.9533169118639493,
+      "recall_malicious": 0.94175,
+      "f1_malicious": 0.9474981554765578,
+      "false_positive_rate": 0.04611666666666667,
+      "false_negative_rate": 0.05825,
+      "true_negatives": 57233,
+      "false_positives": 2767,
+      "false_negatives": 3495,
+      "true_positives": 56505
+    },
+    {
+      "threshold": 0.6,
+      "accuracy": 0.9433166666666667,
+      "precision_malicious": 0.9728206769055745,
+      "recall_malicious": 0.9121166666666667,
+      "f1_malicious": 0.9414911918524635,
+      "false_positive_rate": 0.025483333333333334,
+      "false_negative_rate": 0.08788333333333333,
+      "true_negatives": 58471,
+      "false_positives": 1529,
+      "false_negatives": 5273,
+      "true_positives": 54727
+    },
+    {
+      "threshold": 0.7,
+      "accuracy": 0.9289,
+      "precision_malicious": 0.9871833705652948,
+      "recall_malicious": 0.8690833333333333,
+      "f1_malicious": 0.9243764514013224,
+      "false_positive_rate": 0.011283333333333333,
+      "false_negative_rate": 0.13091666666666665,
+      "true_negatives": 59323,
+      "false_positives": 677,
+      "false_negatives": 7855,
+      "true_positives": 52145
+    },
+    {
+      "threshold": 0.8,
+      "accuracy": 0.9003583333333334,
+      "precision_malicious": 0.9958100270387418,
+      "recall_malicious": 0.8041,
+      "f1_malicious": 0.8897454102850187,
+      "false_positive_rate": 0.0033833333333333332,
+      "false_negative_rate": 0.1959,
+      "true_negatives": 59797,
+      "false_positives": 203,
+      "false_negatives": 11754,
+      "true_positives": 48246
+    }
+  ],
+  "validation_roc_auc": 0.9902699972222221,
+  "elapsed_seconds": 24.94,
+  "note": "Validation split reconstructed using the original random_state=42 and stratified 80/20 split. Threshold selection must use validation data only; the official test set remains reserved for final evaluation."
+}

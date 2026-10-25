@@ -1,0 +1,28 @@
+{
+  "model": "PyTorch LSTM on event-type sequences",
+  "prediction_target": "experiment-level benign/malicious label",
+  "best_epoch": 12,
+  "threshold": 0.5,
+  "test_samples": 24747,
+  "test_benign": 5249,
+  "test_malicious": 19498,
+  "accuracy": 0.863013698630137,
+  "malicious_precision": 0.9421387790953009,
+  "malicious_recall": 0.880192840291312,
+  "malicious_f1": 0.9101129554011773,
+  "roc_auc": 0.8974721110465169,
+  "confusion_matrix_labels_0_1": [
+    [
+      4195,
+      1054
+    ],
+    [
+      2336,
+      17162
+    ]
+  ],
+  "class_0": "benign",
+  "class_1": "malicious",
+  "truncated_test_sequences": 5529,
+  "note": "Labels are experiment-level, not individual-process ground truth. Sequences retain the first 512 events; longer sequences are truncated."
+}

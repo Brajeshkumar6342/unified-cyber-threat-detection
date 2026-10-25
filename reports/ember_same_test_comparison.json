@@ -1,0 +1,48 @@
+{
+  "dataset": "EMBER 2018 official test_features.jsonl",
+  "evaluation_records": 200000,
+  "class_counts": {
+    "benign": 100000,
+    "malicious": 100000,
+    "skipped": 0
+  },
+  "features": 531,
+  "decision_threshold": 0.5,
+  "baseline_model": "models\\malware\\ember_random_forest_baseline.joblib",
+  "full_model": "models\\malware\\ember_random_forest_full.joblib",
+  "baseline": {
+    "accuracy": 0.82689,
+    "precision_malicious": 0.9017822025565388,
+    "recall_malicious": 0.73369,
+    "f1_malicious": 0.8090979267754742,
+    "roc_auc": 0.8988616744000001,
+    "confusion_matrix": [
+      [
+        92009,
+        7991
+      ],
+      [
+        26631,
+        73369
+      ]
+    ]
+  },
+  "full_data_random_forest": {
+    "accuracy": 0.924075,
+    "precision_malicious": 0.9231567498528194,
+    "recall_malicious": 0.92516,
+    "f1_malicious": 0.9241572893410649,
+    "roc_auc": 0.97769641355,
+    "confusion_matrix": [
+      [
+        92299,
+        7701
+      ],
+      [
+        7484,
+        92516
+      ]
+    ]
+  },
+  "elapsed_seconds": 44.9
+}
