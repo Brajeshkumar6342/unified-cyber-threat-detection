@@ -1,0 +1,14 @@
+{
+    "dataset": "UNSW-NB15",
+    "target": "label",
+    "positive_class": 1,
+    "random_state": 42,
+    "validation_size": 0.2,
+    "training_samples": 140272,
+    "validation_samples": 35069,
+    "features_after_encoding": 192,
+    "models_defined": 15,
+    "models_succeeded": 15,
+    "models_failed": 0,
+    "note": "Validation experiment. KNN uses a sampled subset. Official test data was not used."
+}
